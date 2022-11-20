@@ -18,6 +18,7 @@ return new class extends Migration
             $table->integer('main_id');
             $table->string('name');
             $table->string('link')->nullable();
+            $table->integer('priority')->nullable();
             $table->timestamps();
         });
     }

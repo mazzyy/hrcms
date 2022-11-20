@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\sidebarsub;
 use App\Models\sidebar;
 use Illuminate\Http\Request;
 use Auth;
@@ -20,10 +20,12 @@ class SidebarController extends Controller
 
         $user_id = Auth::user()->id;
 
-        $sidebar=sidebar::where('user_id',$user_id)->get();
-
+        $sidebar=sidebar::where('user_id',$user_id)->orderBy('priority', 'asc')->get();
+        $subbar=sidebarsub::Join('sidebars', 'sidebars.id', '=', 'main_id')->orderBy('priority', 'asc')->get(['sidebarsubs.name','sidebarsubs.id','sidebarsubs.main_id','sidebarsubs.created_at','sidebarsubs.updated_at','sidebarsubs.priority']);
+// dd($subbar);
         return view("pages.bar.sidebar")
-               ->with('sidebar',$sidebar);
+               ->with('sidebar',$sidebar)
+               ->with('subbar',$subbar);
     }
 
     /**
@@ -49,12 +51,13 @@ class SidebarController extends Controller
             $s =new sidebar();
             $s->name=$request->input('name');
             $s->user_id=$user_id;
-            $s->icon="icon icon-shape icon-sm";
+            $s->icon=$request->input("icon");
             $s->link="";
+            $s->status="0";
             $s->save();
 
 
-        return $request;
+    return back();
     }
 
     /**
@@ -74,9 +77,13 @@ class SidebarController extends Controller
      * @param  \App\Models\sidebar  $sidebar
      * @return \Illuminate\Http\Response
      */
-    public function edit(sidebar $sidebar)
+    public function edit(Request $request)
     {
         //
+        $sidebar= sidebar::find($request->input('id'));
+
+        return $sidebar;
+
     }
 
     /**
@@ -86,9 +93,20 @@ class SidebarController extends Controller
      * @param  \App\Models\sidebar  $sidebar
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, sidebar $sidebar)
+    public function update(Request $request)
     {
         //
+
+        $s = sidebar::find($request->input('id'));
+
+        $s->name=$request->input('name');
+        $s->icon=$request->input("icon");
+        $s->link=$request->input("link");
+        $s->priority=$request->input("priority");
+        $s->status=$request->input("status");;
+
+        $s->update();
+        return redirect()->route('sidebar');
     }
 
     /**
@@ -97,8 +115,12 @@ class SidebarController extends Controller
      * @param  \App\Models\sidebar  $sidebar
      * @return \Illuminate\Http\Response
      */
-    public function destroy(sidebar $sidebar)
+    public function destroy(Request $request)
     {
         //
+        $user = sidebar::find($request->id);
+        $user->delete();
+
+        return "success";
     }
 }

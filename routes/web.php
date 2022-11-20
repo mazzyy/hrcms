@@ -25,6 +25,8 @@ use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\ResetPassword;
 use App\Http\Controllers\ChangePassword;
 use App\Http\Controllers\SidebarController;
+use App\Http\Controllers\subbarController;
+
 
 Route::get('/', function () {return redirect('/dashboard');})->middleware('auth');
 	Route::get('/register', [RegisterController::class, 'create'])->middleware('guest')->name('register');
@@ -41,10 +43,15 @@ Route::get('/', function () {return redirect('/dashboard');})->middleware('auth'
 Route::group(['middleware' => 'auth'], function () {
 
     // from here
+    //sidebar
     Route::get('sidebar', [SidebarController::class, 'index'])->name('sidebar');
     Route::get('sidebar/store', [SidebarController::class, 'store'])->name('store');
+    Route::get('sidebar/update', [SidebarController::class, 'update'])->name('routeUpdate');
+    Route::get('sidebar/edit', [SidebarController::class, 'edit'])->name('routeEdit');
+    Route::get('sidebar/delete', [SidebarController::class, 'destroy'])->name('routedelete');
 
-
+    //subbar
+    Route::get('subbar/store', [subbarController::class, 'store'])->name('routesub-store');
 
 	Route::get('/virtual-reality', [PageController::class, 'vr'])->name('virtual-reality');
 	Route::get('/rtl', [PageController::class, 'rtl'])->name('rtl');

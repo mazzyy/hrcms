@@ -2,9 +2,6 @@
 
 @section('content')
 @include('layouts.navbars.auth.topnav', ['title' => 'Tables'])
-<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/smoothness/jquery-ui.css" rel="stylesheet" type="text/css" />
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
 <div class="container-fluid py-4">
     <div class="row">
         <div class="col-12">
@@ -33,127 +30,58 @@
                                     <th
                                         class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                                         updated_at </th>
-                                    <th
-                                        class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                        Sub Tables </th>
                                     <th class="text-secondary opacity-7"></th>
-
                                 </tr>
                             </thead>
                             <tbody>
 
                                 @foreach ($sidebar as $s )
-                                <tr id='{{$s->id}}' class="bg-light clicker" style="border-bottom: 1pt solid black;" >
-                                    <td>
-                                        <div class="d-flex px-2 py-1">
-                                            <div
-                                                class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                                                <i class="{{$s->icon}} text-sm opacity-10"></i>
+                                    <tr id={{$s->id}}>
+                                        <td>
+                                            <div class="d-flex px-2 py-1">
+                                                <div
+                                                    class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                                                    <i class="{{$s->icon}} text-sm opacity-10"></i>
+                                                </div>
+                                                <div class="d-flex flex-column justify-content-center">
+                                                    <h6 class="mb-0 text-sm">{{$s->name }}</h6>
+                                                    {{-- <p class="text-xs text-secondary mb-0">john@creative-tim.com</p> --}}
+                                                </div>
                                             </div>
-                                            <div class="d-flex flex-column justify-content-center">
-                                                <h4 class="mb-0 text-sm"><strong><b>{{$s->name }}</b></strong></h4>
-                                                {{-- <p class="text-xs text-secondary mb-0">john@creative-tim.com</p> --}}
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <p class="text-xs font-weight-bold mb-0">{{$s->priority}}</p>
-                                        {{-- <p class="text-xs text-secondary mb-0">Organization</p> --}}
-                                    </td>
-                                    <td class="align-middle text-center text-sm">
-                                        @if ($s->status == "1")
-                                        <span class="badge badge-sm bg-gradient-success">Active</span>
-                                        @else
-                                        <span class="badge badge-sm bg-gradient-warning">NotActive</span>
-                                        @endif
+                                        </td>
+                                        <td>
+                                            <p class="text-xs font-weight-bold mb-0">{{$s->priority}}</p>
+                                            {{-- <p class="text-xs text-secondary mb-0">Organization</p> --}}
+                                        </td>
+                                        <td class="align-middle text-center text-sm">
+                                            @if ($s->status == "1")
+                                            <span class="badge badge-sm bg-gradient-success">Active</span>
+                                            @else
+                                            <span class="badge badge-sm bg-gradient-warning">NotActive</span>
+                                            @endif
 
-                                    </td>
-                                    <td class="align-middle text-center">
-                                        <span class="text-secondary text-xs font-weight-bold">{{$s->created_at}}</span>
-                                    </td>
-                                    <td class="align-middle text-center">
-                                        <span class="text-secondary text-xs font-weight-bold">{{$s->updated_at}}</span>
-                                    </td>
-                                    <td class="align-middle text-center">
-                                        <span class="btn btn-primary btn-xs  "><a type="button"  data-bs-toggle="modal"
-                                                data-bs-target="#subModal" onclick="sub({{$s->id}},'{{$s->name}}')">Create sub tabs</a></span>
-                                    </td>
+                                        </td>
+                                        <td class="align-middle text-center">
+                                            <span class="text-secondary text-xs font-weight-bold">{{$s->created_at}}</span>
+                                        </td>
+                                        <td class="align-middle text-center">
+                                            <span class="text-secondary text-xs font-weight-bold">{{$s->updated_at}}</span>
+                                        </td>
+                                        <td class="align-middle">
 
-                                    <td class="align-middle">
-
-                                        <div class="dropdown">
-                                            <button class="btn btn-link text-secondary -info dropdown-toggle"
-                                                type="button" id="dropdownMenuButton" data-bs-toggle="dropdown"
-                                                aria-expanded="false">
-                                                <i class="fa fa-ellipsis-v text-xs"></i>
-                                            </button>
-                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                <li><a type="button" class="dropdown-item" data-bs-toggle="modal"
-                                                        data-bs-target="#editModal" onclick="Edit({{$s->id}})">Edit</a>
-                                                </li>
-                                                <li><a class="dropdown-item" onclick="Delete({{$s->id}})"
-                                                        href="#">Delete</a></li>
-                                                {{-- <li><a class="dropdown-item" href="#">Something else here</a></li> --}}
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
-                               @foreach ( $subbar as  $sub)
-                                    @if ($s->id == $sub->main_id)
-
-
-                                        <tr id='sub{{$sub->id}}' style="display: none;">
-                                                    <td>
-                                                        <div class="d-flex px-2 py-1">
-                                                            <div
-                                                                class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                                                                <i class="{{$sub->icon}} text-sm opacity-10"></i>
-                                                            </div>
-                                                            <div class="d-flex flex-column justify-content-center">
-                                                                <h6 class="mb-0 text-sm">{{$sub->name }}</h6>
-                                                                {{-- <p class="text-xs text-secondary mb-0">john@creative-tim.com</p> --}}
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <p class="text-xs font-weight-bold mb-0">{{$sub->priority}}</p>
-                                                        {{-- <p class="text-xs text-secondary mb-0">Organization</p> --}}
-                                                    </td>
-                                                    <td class="align-middle text-center text-sm">
-
-
-                                                    </td>
-                                                    <td class="align-middle text-center">
-                                                        <span class="text-secondary text-xs font-weight-bold">{{$sub->created_at}}</span>
-                                                    </td>
-                                                    <td class="align-middle text-center">
-                                                        <span class="text-secondary text-xs font-weight-bold">{{$sub->updated_at}}</span>
-                                                    </td>
-                                                    <td class="align-middle text-center">
-
-                                                    </td>
-
-                                                    <td class="align-middle">
-
-                                                        <div class="dropdown">
-                                                            <button class="btn btn-link text-secondary -info dropdown-toggle"
-                                                                type="button" id="dropdownMenuButton" data-bs-toggle="dropdown"
-                                                                aria-expanded="false">
-                                                                <i class="fa fa-ellipsis-v text-xs"></i>
-                                                            </button>
-                                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                <li><a type="button" class="dropdown-item" data-bs-toggle="modal"
-                                                                        data-bs-target="#editModal" onclick="Edit({{$s->id}})">Edit</a>
-                                                                </li>
-                                                                <li><a class="dropdown-item" onclick="Delete({{$s->id}})"
-                                                                        href="#">Delete</a></li>
-                                                                {{-- <li><a class="dropdown-item" href="#">Something else here</a></li> --}}
-                                                            </ul>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                     @endif
-                               @endforeach
+                                            <div class="dropdown">
+                                                <button class="btn btn-link text-secondary -info dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <i class="fa fa-ellipsis-v text-xs"></i>
+                                                </button>
+                                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                  <li><a type="button"class="dropdown-item" data-bs-toggle="modal"
+                                                    data-bs-target="#editModal" onclick="Edit({{$s->id}})" >Edit</a></li>
+                                                  <li><a class="dropdown-item"  onclick="Delete({{$s->id}})" href="#">Delete</a></li>
+                                                  {{-- <li><a class="dropdown-item" href="#">Something else here</a></li> --}}
+                                                </ul>
+                                              </div>
+                                        </td>
+                                    </tr>
                                 @endforeach
 
 
@@ -169,7 +97,7 @@
         <div class="col-12">
             <div class="card mb-4">
                 <div class="card-header pb-0">
-                    <h6>Sub table</h6>
+                    <h6>Projects table</h6>
                 </div>
                 <div class="card-body px-0 pt-0 pb-2">
                     <div class="table-responsive p-0">
@@ -472,148 +400,74 @@
 
     {{-- Edit modal --}}
 
-    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Edit</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form method="get" action="{{route('routeUpdate')}}">
-                        <div class="form-group">
-                            <label for="example-text-input" class="form-control-label">Name</label>
-                            <input name="name" class="form-control" type="text" value="-" id="edit_name">
+     <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+     <div class="modal-dialog modal-dialog-centered" role="document">
+         <div class="modal-content">
+             <div class="modal-header">
+                 <h5 class="modal-title" id="exampleModalLabel">Edit</h5>
+                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                     <span aria-hidden="true">&times;</span>
+                 </button>
+             </div>
+             <div class="modal-body">
+                 <form method="get" action="{{route('routeUpdate')}}">
+                     <div class="form-group">
+                         <label for="example-text-input" class="form-control-label">Name</label>
+                         <input name="name" class="form-control" type="text" value="-" id="edit_name">
 
-                        </div>
-                        <div class="form-group">
-                            <label for="example-search-input" class="form-control-label">Link</label>
-                            <input name="link" class="form-control" type="search" value="Tell me your secret ..."
-                                id="edit_link">
-                        </div>
-                        <div class="form-group">
-                            <label for="example-search-input" class="form-control-label">Icon</label>
-                            {{-- <input class="form-control" type="search" value="Tell me your secret ..." id="example-search-input"> --}}
-                            <select name="icon" id="edit_icon" class="form-control form-control-lg">
-                                <option selected disabled>Select</option>
-                                <option value="ni ni-world-2 text-danger">icon 1</option>
-                                <option value="ni ni-app text-info">icon 2</option>
-                                <option value="ni ni-single-copy-04 text-warning ">icon 3</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="example-search-input" class="form-control-label">Priority</label>
-                            <input name="priority" class="form-control" type="search" value="Tell me your secret ..."
-                                id="edit_priority">
-                        </div>
-                        <div class="form-group">
-                            <label for="example-search-input" class="form-control-label">Icon</label>
-                            {{-- <input class="form-control" type="search" value="Tell me your secret ..." id="example-search-input"> --}}
-                            <select name="status" id="edit_status" class="form-control form-control-lg">
-                                <option disabled>Select</option>
-                                <option value="1">Active</option>
-                                <option value="0">NotActive</option>
+                     </div>
+                     <div class="form-group">
+                         <label for="example-search-input" class="form-control-label">Link</label>
+                         <input name="link" class="form-control" type="search" value="Tell me your secret ..."
+                             id="edit_link">
+                     </div>
+                     <div class="form-group">
+                         <label for="example-search-input" class="form-control-label">Icon</label>
+                         {{-- <input class="form-control" type="search" value="Tell me your secret ..." id="example-search-input"> --}}
+                         <select name="icon" id="edit_icon" class="form-control form-control-lg">
+                             <option selected disabled >Select</option>
+                             <option value="ni ni-world-2 text-danger">icon 1</option>
+                             <option value="ni ni-app text-info">icon 2</option>
+                             <option value="ni ni-single-copy-04 text-warning ">icon 3</option>
+                         </select>
+                     </div>
+                     <div class="form-group" >
+                        <label for="example-search-input" class="form-control-label">Priority</label>
+                        <input name="priority"  class="form-control" type="search" value="Tell me your secret ..."
+                            id="edit_priority">
+                    </div>
+                    <div class="form-group">
+                        <label for="example-search-input" class="form-control-label">Icon</label>
+                        {{-- <input class="form-control" type="search" value="Tell me your secret ..." id="example-search-input"> --}}
+                        <select name="status" id="edit_status" class="form-control form-control-lg">
+                            <option disabled >Select</option>
+                            <option value="1">Active</option>
+                            <option value="0">NotActive</option>
 
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="example-search-input" class="form-control-label">Id</label>
-                            <input name="id" class="form-control" type="search" value="" id="edit_id">
-                        </div>
-
-
-                        <div>
-                            <input type="submit" class="btn bg-gradient-primary" value="Create">
-                        </div>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                         <label for="example-search-input" class="form-control-label">Id</label>
+                         <input name="id" class="form-control" type="search" value=""
+                             id="edit_id">
+                     </div>
 
 
-                    </form>
-                </div>
-                {{-- <div class="modal-footer">
+                     <div>
+                         <input type="submit" class="btn bg-gradient-primary" value="Create">
+                     </div>
+
+
+                 </form>
+             </div>
+             {{-- <div class="modal-footer">
                <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
                <button type="button" class="btn bg-gradient-primary">Save changes</button>
              </div> --}}
-            </div>
-        </div>
-    </div>
-
-
-    {{-- sub modal --}}
-
-    <div class="modal fade" id="subModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                 <h5 class="modal-title" >Sub => <span id="sub-head"></span> </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form method="get" action="{{route('routesub-store')}}">
-                        <div class="form-group">
-                            <label for="example-text-input" class="form-control-label">Name</label>
-                            <input name="name" class="form-control" type="text" value="-" id="edit_name">
-
-                        </div>
-                        <div class="form-group">
-                            <label for="example-search-input" class="form-control-label">Link</label>
-                            <input name="link" class="form-control" type="search" value="Tell me your secret ..."
-                                id="edit_link">
-                        </div>
-                        {{-- <div class="form-group">
-                            <label for="example-search-input" class="form-control-label">Icon</label>
-
-                            <select name="icon" id="edit_icon" class="form-control form-control-lg">
-                                <option selected disabled>Select</option>
-                                <option value="ni ni-world-2 text-danger">icon 1</option>
-                                <option value="ni ni-app text-info">icon 2</option>
-                                <option value="ni ni-single-copy-04 text-warning ">icon 3</option>
-                            </select>
-                        </div> --}}
-                        <div class="form-group">
-                            <label for="example-search-input" class="form-control-label">Priority</label>
-                            <input name="priority" class="form-control" type="search" value="Tell me your secret ..."
-                                id="edit_priority">
-                        </div>
-                        <div class="form-group">
-                            <label for="example-search-input" class="form-control-label">Icon</label>
-                            {{-- <input class="form-control" type="search" value="Tell me your secret ..." id="example-search-input"> --}}
-                            {{-- <select name="status" id="edit_status" class="form-control form-control-lg">
-                                <option disabled>Select</option>
-                                <option value="1">Active</option>
-                                <option value="0">NotActive</option>
-
-                            </select> --}}
-                        </div>
-
-                        <div class="form-group">
-                            <label for="example-search-input" class="form-control-label">head Id</label>
-                            <input name="id-head" class="form-control" type="search" value="" id="id-head">
-                        </div>
-
-
-
-
-                        <div>
-                            <input type="submit" class="btn bg-gradient-primary" value="Create">
-                        </div>
-
-
-                    </form>
-                </div>
-                {{-- <div class="modal-footer">
-               <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
-               <button type="button" class="btn bg-gradient-primary">Save changes</button>
-             </div> --}}
-            </div>
-        </div>
-    </div>
-
+         </div>
+     </div>
+ </div>
     @include('layouts.footers.auth.footer')
 </div>
 
@@ -679,35 +533,21 @@
            }
 
 
-</script>
 
-{{-- //funtion to hide subbar --}}
-<script>
-    $('.clicker').click(function(){
-  $(this).nextUntil('.clicker').slideToggle('normal');
-});
-</script>
 
+
+
+
+
+</script>
 
 <script>
 
-    function sub(id,name){
-
-        console.log(id);
-        console.log(name);
-        document.getElementById('sub-head').innerHTML=name
-        document.getElementById('id-head').value=id
-
-
-    }
 </script>
-
-
 @endsection
 
 @push('js')
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-
 
 
 @endpush
